@@ -35,10 +35,10 @@ const mongoDB = require('./DB/options/configMongoDB');
 //--------------------------------------------------------------------------------------------------------------------------------------------//
 //* puerto en yags por defecto
 const args = yargs.default({ PORT: 8080 }).alias({ p: 'PORT' }).argv;
-const PORT = args.p;
+const PORT = process.env.PORT || args.p;
 
 //*.env
-const HOST = process.env.HOST;
+const HOST = process.env.HOST || '127.0.0.1';
 const SECRET_MONGO = process.env.SECRET_MONGO;
 const DB_MONGO_URL = process.env.DB_MONGO_URL;
 
@@ -253,12 +253,8 @@ app.get('/logout', routes.getLogout);
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
 //* Servidor
-HTTPserver.listen(PORT, () => {
-	console.log(
-		`Servidor escuchado en el puerto ${process.env.HOST || HOST}:${
-			procces.env.PORT || PORT
-		}`
-	);
+HTTPserver.listen(process.env.PORT, () => {
+	console.log(`Servidor escuchado en el puerto ${HOST}:${PORT}`);
 });
 
 //-----------------------------------------------------------------------------------------------------------------------------------------------------------------//
