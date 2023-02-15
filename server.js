@@ -229,10 +229,6 @@ app.get('/info', (req, res) => {
 	res.render('main', { layout: 'info', dataProcess: dataProcess });
 });
 
-// app.get('*', (req, res) => {
-// 	logger.log('warn', 'Ruta: inexistente - Metodo: GET');
-// });
-
 //*Endpoints passport
 app.get('/login', routes.getLogin);
 app.post(
@@ -291,12 +287,7 @@ const guardarProducto = async (nuevoProducto) => {
 const enviarMensajesSocket = async (socket) => {
 	try {
 		const mensajes = await contenedorMensajes.getAll();
-		//modificar con normalizer
-		const mensajeNormalizado = mensajeNormalizr(mensajes);
-		socket.emit('lista mensajes', {
-			id: 'mensajes',
-			mensajes: mensajeNormalizado,
-		});
+		socket.emit('lista mensajes', mensajes);
 	} catch (error) {
 		logger.log('error', 'no se pudieron enviar los mensajes');
 	}
@@ -306,7 +297,7 @@ const guardarMensaje = async (nuevoMensaje) => {
 	try {
 		nuevoMensaje.fecha = new Date().toLocaleString();
 		await contenedorMensajes.save({
-			r: nuevoMensaje,
+			author: nuevoMensaje,
 			text: nuevoMensaje.text,
 			fecha: nuevoMensaje.fecha,
 		});
